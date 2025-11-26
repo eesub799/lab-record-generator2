@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab Record Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1a1a1a;
+            color: #e0e0e0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #2a2a2a;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            color: #fff;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: #999;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            background: #333;
+            padding: 20px;
+            border-radius: 6px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            color: #fff;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #4a90e2;
+            font-weight: 600;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            color: #bbb;
+            font-weight: 500;
+            font-size: 13px;
+        }
+
+        input[type="text"],
+        input[type="date"] {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #444;
+            border-radius: 4px;
+            font-size: 14px;
+            background: #1a1a1a;
+            color: #e0e0e0;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #4a90e2;
+        }
+
+        input::placeholder {
+            color: #666;
+        }
+
+        .experiment-card {
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            border: 1px solid #444;
+        }
+
+        .experiment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #444;
+        }
+
+        .experiment-number {
+            font-weight: 600;
+            color: #4a90e2;
+            font-size: 15px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: #4a90e2;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #357abd;
+        }
+
+        .btn-secondary {
+            background: #5a5a5a;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #6a6a6a;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+            padding: 6px 12px;
+            font-size: 13px;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-group button {
+            flex: 1;
+        }
+
+        .message {
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .message-success {
+            background: #155724;
+            color: #d4edda;
+            border: 1px solid #28a745;
+        }
+
+        .message-error {
+            background: #721c24;
+            color: #f8d7da;
+            border: 1px solid #dc3545;
+        }
+
+        .message-info {
+            background: #0c5460;
+            color: #d1ecf1;
+            border: 1px solid #17a2b8;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .add-experiment-btn {
+            width: 100%;
+            margin-top: 10px;
+            border: 2px dashed #444;
+            background: transparent;
+            color: #4a90e2;
+            padding: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .add-experiment-btn:hover {
+            border-color: #4a90e2;
+            background: rgba(74, 144, 226, 0.1);
+        }
+
+        .icon {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎓 Lab Record Generator</h1>
+        <p class="subtitle">Generate professional lab records with QR codes instantly</p>
+
+        <div id="message" class="message hidden"></div>
+
+        <!-- Document Information -->
+        <div class="section">
+            <div class="section-title">Document Information</div>
+            
+            <div class="form-group">
+                <label>Course Title and Code *</label>
+                <input type="text" id="courseTitle" placeholder="e.g., AI1014-Fundamentals of Artificial Intelligence">
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Student Name *</label>
+                    <input type="text" id="studentName" placeholder="e.g., Boopathy S">
+                </div>
+
+                <div class="form-group">
+                    <label>Register Number *</label>
+                    <input type="text" id="registerNumber" placeholder="e.g., 2305003002">
+                </div>
+            </div>
+        </div>
+
+        <!-- Experiments Section -->
+        <div class="section">
+            <div class="section-title">Experiments</div>
+            <div id="experimentsContainer"></div>
+            <button class="add-experiment-btn" onclick="addExperiment()">
+                + Add Experiment
+            </button>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="btn-group">
+            <button class="btn btn-secondary" onclick="showPreview()">
+                👁️ Show Preview
+            </button>
+            <button class="btn btn-primary" onclick="generateDocument()">
+                📥 Download DOCX
+            </button>
+        </div>
+
+        <!-- Preview Modal -->
+        <div id="previewModal" class="hidden" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; overflow: auto; padding: 20px;">
+            <div style="max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; color: #000;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2>Preview</h2>
+                    <button class="btn btn-danger" onclick="closePreview()">Close</button>
+                </div>
+                <div id="previewContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let experiments = [{ title: '', date: '', github: '' }];
+
+        // Initialize
+        function init() {
+            renderExperiments();
+            loadSavedData();
+        }
+
+        // Auto-save data
+        function autoSave() {
+            const data = {
+                courseTitle: document.getElementById('courseTitle').value,
+                studentName: document.getElementById('studentName').value,
+                registerNumber: document.getElementById('registerNumber').value,
+                experiments: experiments
+            };
+            localStorage.setItem('labRecordData', JSON.stringify(data));
+        }
+
+        // Load saved data
+        function loadSavedData() {
+            const saved = localStorage.getItem('labRecordData');
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    document.getElementById('courseTitle').value = data.courseTitle || '';
+                    document.getElementById('studentName').value = data.studentName || '';
+                    document.getElementById('registerNumber').value = data.registerNumber || '';
+                    experiments = data.experiments || [{ title: '', date: '', github: '' }];
+                    renderExperiments();
+                    showMessage('Previous data restored', 'info');
+                } catch (e) {
+                    console.log('No saved data');
+                }
+            }
+        }
+
+        // Add experiment
+        function addExperiment() {
+            experiments.push({ title: '', date: '', github: '' });
+            renderExperiments();
+            autoSave();
+        }
+
+        // Remove experiment
+        function removeExperiment(index) {
+            if (experiments.length > 1) {
+                experiments.splice(index, 1);
+                renderExperiments();
+                autoSave();
+            }
+        }
+
+        // Update experiment
+        function updateExperiment(index, field, value) {
+            experiments[index][field] = value;
+            autoSave();
+        }
+
+        // Render experiments
+        function renderExperiments() {
+            const container = document.getElementById('experimentsContainer');
+            container.innerHTML = '';
+
+            experiments.forEach((exp, index) => {
+                const card = document.createElement('div');
+                card.className = 'experiment-card';
+                card.innerHTML = `
+                    <div class="experiment-header">
+                        <span class="experiment-number">Experiment ${String(index + 1).padStart(2, '0')}</span>
+                        ${experiments.length > 1 ? `<button class="btn btn-danger" onclick="removeExperiment(${index})">Remove</button>` : ''}
+                    </div>
+                    <div class="form-group">
+                        <label>Experiment Title *</label>
+                        <input type="text" value="${exp.title}" 
+                               onchange="updateExperiment(${index}, 'title', this.value)"
+                               placeholder="e.g., Developing-AI-Agent-with-PEAS-Description">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Date (Optional)</label>
+                            <input type="date" value="${exp.date}" 
+                                   onchange="updateExperiment(${index}, 'date', this.value)">
+                        </div>
+                        <div class="form-group">
+                            <label>GitHub Link *</label>
+                            <input type="text" value="${exp.github}" 
+                                   onchange="updateExperiment(${index}, 'github', this.value)"
+                                   placeholder="https://github.com/username/repo">
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Show preview
+        function showPreview() {
+            const courseTitle = document.getElementById('courseTitle').value;
+            const studentName = document.getElementById('studentName').value;
+            const registerNumber = document.getElementById('registerNumber').value;
+
+            if (!courseTitle || !studentName || !registerNumber) {
+                showMessage('Please fill in all required fields', 'error');
+                return;
+            }
+
+            let previewHTML = `
+                <div style="font-family: Arial, sans-serif;">
+                    <h3 style="text-align: center; margin-bottom: 20px;">${courseTitle}</h3>
+                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+                        <thead>
+                            <tr style="background: #f0f0f0;">
+                                <th style="border: 1px solid #000; padding: 8px; width: 50px;">Exp</th>
+                                <th style="border: 1px solid #000; padding: 8px; width: 100px;">Date</th>
+                                <th style="border: 1px solid #000; padding: 8px;">Name of The Experiment</th>
+                                <th style="border: 1px solid #000; padding: 8px; width: 80px;">QR Code</th>
+                                <th style="border: 1px solid #000; padding: 8px; width: 80px;">Mark</th>
+                                <th style="border: 1px solid #000; padding: 8px; width: 100px;">Signature</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+
+            experiments.forEach((exp, index) => {
+                if (exp.title || exp.github) {
+                    previewHTML += `
+                        <tr>
+                            <td style="border: 1px solid #000; padding: 8px; text-align: center;">${String(index + 1).padStart(2, '0')}</td>
+                            <td style="border: 1px solid #000; padding: 8px;">${exp.date || ''}</td>
+                            <td style="border: 1px solid #000; padding: 8px;">${exp.title}<br/><small style="color: #666;">${exp.github}</small></td>
+                            <td style="border: 1px solid #000; padding: 8px; text-align: center;">[QR Code]</td>
+                            <td style="border: 1px solid #000; padding: 8px;"></td>
+                            <td style="border: 1px solid #000; padding: 8px;"></td>
+                        </tr>
+                    `;
+                }
+            });
+
+            previewHTML += `
+                        </tbody>
+                    </table>
+                    <p style="margin-top: 30px;"><strong>I confirm that the experiments and GitHub links provided are entirely my own work.</strong></p>
+                    <p style="margin-top: 20px;">Name: ${studentName} &nbsp;&nbsp;&nbsp; Register Number: ${registerNumber}</p>
+                    <p style="margin-top: 10px;">Date: _____________ &nbsp;&nbsp;&nbsp; Learner's Signature: _____________</p>
+                </div>
+            `;
+
+            document.getElementById('previewContent').innerHTML = previewHTML;
+            document.getElementById('previewModal').classList.remove('hidden');
+        }
+
+        // Close preview
+        function closePreview() {
+            document.getElementById('previewModal').classList.add('hidden');
+        }
+
+        // Generate document
+        async function generateDocument() {
+            const courseTitle = document.getElementById('courseTitle').value;
+            const studentName = document.getElementById('studentName').value;
+            const registerNumber = document.getElementById('registerNumber').value;
+
+            // Validation
+            if (!courseTitle || !studentName || !registerNumber) {
+                showMessage('Please fill in all required fields', 'error');
+                return;
+            }
+
+            const validExperiments = experiments.filter(exp => exp.title && exp.github);
+            if (validExperiments.length === 0) {
+                showMessage('Please add at least one experiment with title and GitHub link', 'error');
+                return;
+            }
+
+            showMessage('Generating document... Please wait', 'info');
+
+            const payload = {
+                course_title: courseTitle,
+                student_name: studentName,
+                register_number: registerNumber,
+                experiments: validExperiments
+            };
+
+            try {
+                // IMPORTANT: Replace this URL with your actual Render backend URL
+                const BACKEND_URL = 'http://localhost:8000';
+                
+                const response = await fetch(`${BACKEND_URL}/generate-docx`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `${registerNumber}_Lab_Record.docx`;
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
+                    
+                    showMessage('✅ Document generated successfully!', 'success');
+                } else {
+                    throw new Error('Generation failed');
+                }
+            } catch (error) {
+                showMessage('⚠️ Backend not deployed yet. Please deploy the backend first. Data is saved locally.', 'error');
+                console.log('Payload that will be sent:', payload);
+            }
+        }
+
+        // Show message
+        function showMessage(text, type) {
+            const messageEl = document.getElementById('message');
+            messageEl.textContent = text;
+            messageEl.className = `message message-${type}`;
+            messageEl.classList.remove('hidden');
+            
+            setTimeout(() => {
+                messageEl.classList.add('hidden');
+            }, 5000);
+        }
+
+        // Initialize on load
+        init();
+
+        // Auto-save on input
+        document.addEventListener('input', autoSave);
+    </script>
+</body>
+</html>
