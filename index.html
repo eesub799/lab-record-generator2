@@ -499,7 +499,7 @@
 
             try {
                 // IMPORTANT: Replace this URL with your actual Render backend URL
-                const BACKEND_URL = 'http://localhost:8000';
+                const BACKEND_URL = 'https://lab-record-generator2.onrender.com';
                 
                 const response = await fetch(`${BACKEND_URL}/generate-docx`, {
                     method: 'POST',
@@ -549,4 +549,5 @@
         document.addEventListener('input', autoSave);
     </script>
 </body>
+
 </html>
