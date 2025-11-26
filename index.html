@@ -368,9 +368,16 @@
 
         // Update experiment
         function updateExperiment(index, field, value) {
-            experiments[index][field] = value;
-            autoSave();
+            if (field === 'date' && value) {
+                const parts = value.split('-'); // [YYYY, MM, DD]
+                experiments[index].date = `${parts[2]}-${parts[1]}-${parts[0]}`; // DD-MM-YYYY
+            } else {
+                experiments[index][field] = value;
+            }
+            autosave();
         }
+
+
 
         // Render experiments
         function renderExperiments() {
@@ -551,3 +558,4 @@
 </body>
 
 </html>
+
